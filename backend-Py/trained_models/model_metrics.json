@@ -1,0 +1,38 @@
+{
+  "model_architecture": "Ensemble ML Pipeline (TF-IDF + Multinomial NB Domain Classifier, Random Forest Regressor & Gradient Boosting Placement Classifier)",
+  "domain_classifier": {
+    "algorithm": "Multinomial Naive Bayes + TF-IDF (1500 n-gram features)",
+    "accuracy": 100.0,
+    "domains_supported": [
+      "Full-Stack Web Development",
+      "Machine Learning & Data Science",
+      "Core Systems, OS & DSA",
+      "Cloud Computing & DevOps",
+      "Mobile & App Engineering"
+    ]
+  },
+  "readiness_regressor": {
+    "algorithm": "Random Forest Regressor (120 Estimators, Depth=12)",
+    "r2_score": 0.8456,
+    "mean_absolute_error": 2.94
+  },
+  "placement_classifier": {
+    "algorithm": "Gradient Boosting Classifier",
+    "accuracy": 82.5,
+    "f1_score": 0.823,
+    "classes": [
+      "Needs Preparation",
+      "Placement Ready",
+      "Top Performer Star"
+    ]
+  },
+  "features_used": [
+    "speech_wpm",
+    "filler_count",
+    "word_count",
+    "semantic_relevance",
+    "technical_depth",
+    "confidence_score"
+  ],
+  "training_samples": 1200
+}
