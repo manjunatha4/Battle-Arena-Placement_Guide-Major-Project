@@ -1,0 +1,9 @@
+venv/
+.venv/
+__pycache__/
+*.ipynb
+.ipynb_checkpoints/
+*.md
+*.log
+screenshots/
+backend-Node/uploads/
