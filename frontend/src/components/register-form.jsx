@@ -73,6 +73,15 @@ export function RegisterForm({ isModal = false }) {
    }
  });
 
+   const handleGuestLogin = () => {
+    localStorage.setItem("profile_name", "Student Candidate");
+    localStorage.setItem("profile_email", "student.candidate@battlearena.edu");
+    localStorage.setItem("profile_avatar", "");
+    localStorage.setItem("token", "demo-token-" + Date.now());
+    if (isModal && authModal) authModal.closeModal();
+    navigate("/app");
+  };
+
  const handleSendOtp = async (e) => {
  e.preventDefault();
  if (!name || !email || !password) {
@@ -193,6 +202,16 @@ export function RegisterForm({ isModal = false }) {
     {loading ? "Signing up..." : "Continue with Google"}
   </span>
   </button>
+
+ {/* 1-Click Guest / Evaluator Sign-in */}
+ <button
+ type="button"
+ onClick={handleGuestLogin}
+ className="flex items-center justify-center gap-2.5 w-full px-4 py-2.5 rounded-xl border border-[var(--border-glass)] bg-[var(--bg-glass-hover)] hover:bg-[var(--accent-purple)]/20 hover:border-[var(--accent-purple)] text-xs font-semibold text-[var(--text-main)] transition-all mb-4 cursor-pointer shadow-sm group"
+ >
+ <Sparkles className="w-4 h-4 text-[var(--accent-cyan)] group-hover:rotate-12 transition-transform" />
+ <span>Instant Demo / Evaluator Access (1-Click)</span>
+ </button>
   <div className="flex items-center gap-3 mb-5">
   <div className="flex-1 h-px bg-[var(--border-glass)]"></div>
   <span className="text-xs text-[var(--text-muted)] font-medium">or</span>
