@@ -1,16 +1,25 @@
 {
-    "version": 2,
-    "builds": [
-     {
-      "src": "index.js",
-      "use": "@vercel/node",
-      "config": { "includeFiles": ["dist/**"] }
-     }
-    ],
-    "routes": [
-     {
-      "src": "/(.*)",
-      "dest": "index.js"
-     }
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "services": {
+        "backend-node": {
+            "root": "backend-Node",
+            "framework": "express"
+        },
+        "backend-py": {
+            "root": "backend-Py",
+            "framework": "fastapi"
+        },
+        "frontend": {
+            "root": "frontend",
+            "framework": "vite"
+        }
+    },
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": {
+                "service": "frontend"
+            }
+        }
     ]
-   }
+}

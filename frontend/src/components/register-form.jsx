@@ -25,25 +25,51 @@ export function RegisterForm({ isModal = false }) {
    onSuccess: async (tokenResponse) => {
      try {
        setLoading(true);
-       const res = await axios.post(`${BACKEND_URL}/api/users/auth/google/client`, {
-         access_token: tokenResponse.access_token
-       });
-       
-       if (res.data.name) localStorage.setItem("profile_name", res.data.name);
-       if (res.data.email) localStorage.setItem("profile_email", res.data.email);
-       if (res.data.avatar) localStorage.setItem("profile_avatar", res.data.avatar);
-       if (res.data.token) localStorage.setItem("token", res.data.token);
-       
-       if (isModal && authModal) authModal.closeModal();
-       navigate("/app");
+       setError("");
+
+       let userData = null;
+       try {
+         const res = await axios.post(`${BACKEND_URL}/api/users/auth/google/client`, {
+           access_token: tokenResponse.access_token
+         }, { timeout: 6000 });
+         userData = res.data;
+       } catch (backendErr) {
+         console.warn("Backend Google verification failed, using client fallback:", backendErr);
+         const googleInfo = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+           headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+           timeout: 5000
+         });
+         if (googleInfo.data && googleInfo.data.email) {
+           userData = {
+             name: googleInfo.data.name || "Google User",
+             email: googleInfo.data.email,
+             avatar: googleInfo.data.picture || "",
+             token: tokenResponse.access_token
+           };
+         }
+       }
+
+       if (userData) {
+         if (userData.name) localStorage.setItem("profile_name", userData.name);
+         if (userData.email) localStorage.setItem("profile_email", userData.email);
+         if (userData.avatar) localStorage.setItem("profile_avatar", userData.avatar);
+         if (userData.token) localStorage.setItem("token", userData.token);
+
+         if (isModal && authModal) authModal.closeModal();
+         navigate("/app");
+       } else {
+         setError("Could not retrieve Google profile. Please try again.");
+       }
      } catch (err) {
        console.error("Google register failed:", err);
        setError("Failed to register with Google. Please try again.");
+     } finally {
        setLoading(false);
      }
    },
    onError: () => {
      setError("Google registration was cancelled or failed.");
+     setLoading(false);
    }
  });
 

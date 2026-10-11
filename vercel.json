@@ -1,0 +1,45 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "backend-node": {
+      "root": "backend-Node",
+      "framework": "express",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "backend-py",
+          "format": "url",
+          "env": "ML_SERVICE_URL"
+        }
+      ]
+    },
+    "backend-py": {
+      "root": "backend-Py",
+      "framework": "fastapi"
+    },
+    "frontend": {
+      "root": "frontend",
+      "framework": "vite"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "backend-node"
+      }
+    },
+    {
+      "source": "/job-recommendations",
+      "destination": {
+        "service": "backend-node"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "frontend"
+      }
+    }
+  ]
+}

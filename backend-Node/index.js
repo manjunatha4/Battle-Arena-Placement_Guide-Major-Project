@@ -71,11 +71,11 @@ app.get("/api/users/auth/google/callback",
       // On any error or failure, redirect to frontend login with error message
       if (err) {
         console.error("Google OAuth Error:", err);
-        return res.redirect(`${process.env.FRONTEND_URL}/login?error=google_failed`);
+        const feUrl = process.env.FRONTEND_URL || ""; return res.redirect(`${feUrl}/login?error=google_failed`);
       }
       if (!user) {
         console.error("Google OAuth: No user returned", info);
-        return res.redirect(`${process.env.FRONTEND_URL}/login?error=no_user`);
+        return res.redirect(`${feUrl}/login?error=no_user`);
       }
 
       try {
@@ -90,10 +90,10 @@ app.get("/api/users/auth/google/callback",
           token
         }));
 
-        res.redirect(`${process.env.FRONTEND_URL}/auth/google/success?data=${userData}`);
+        res.redirect(`${feUrl}/auth/google/success?data=${userData}`);
       } catch (tokenErr) {
         console.error("Token generation error:", tokenErr);
-        res.redirect(`${process.env.FRONTEND_URL}/login?error=token_failed`);
+        res.redirect(`${feUrl}/login?error=token_failed`);
       }
     })(req, res, next);
   }
@@ -156,7 +156,7 @@ const MOCK_JOBS = [
   }
 ];
 
-app.get("/job-recommendations", async (req, res) => {
+app.get(["/job-recommendations", "/api/job-recommendations"], async (req, res) => {
   const appId = process.env.ADZUNA_API_ID;
   const apiKey = process.env.ADZUNA_API_KEY;
   const url = `https://api.adzuna.com/v1/api/jobs/in/search/1`;
@@ -202,3 +202,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log("Server listening on port: " + PORT)
 })
+
+export default app;
